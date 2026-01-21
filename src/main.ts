@@ -7,6 +7,89 @@ const LINKS = {
   email: 'mailto:nurcan.d00@gmail.com',
 } as const
 
+const translations = {
+  tr: {
+    nav: {
+      about: 'Hakkımda',
+      skills: 'Yetenekler',
+      projects: 'Projeler',
+      writing: 'Yazılar',
+      contact: 'İletişim',
+    },
+    hero: {
+      greeting: 'Merhaba, ben',
+      subtitle: 'Ürün odaklı, kullanıcı dostu arayüzler tasarlarım.',
+      bio: 'React ve React Native ekosisteminde uzmanlaşmış bir Mobil & Frontend Geliştiriciyim. Bu teknolojileri kullanarak performanslı, ölçeklenebilir ve kullanıcı deneyimi odaklı dijital çözümler üretiyorum. Figma tasarımlarını piksel hassasiyetinde işlevsel arayüzlere dönüştürme ve karmaşık uygulama süreçlerini yönetme konusunda deneyim sahibiyim. İş dünyasındaki operasyonel geçmişimden gelen çözüm odaklı yaklaşımımı, yazılım dünyasının dinamikleriyle birleştirerek projelere değer katmayı hedefliyorum.',
+    },
+    sections: {
+      about: {
+        title: 'Hakkımda',
+        subtitle: 'Ben kimim, ne yaparım, nasıl çalışırım?',
+        content: 'React ve React Native ekosisteminde uzmanlaşmış bir Mobil & Frontend Geliştirici olarak, performanslı ve ölçeklenebilir dijital çözümler üretiyorum. Figma tasarımlarını piksel hassasiyetinde işlevsel arayüzlere dönüştürme ve karmaşık uygulama süreçlerini yönetme konusunda deneyim sahibiyim. İş dünyasındaki operasyonel geçmişimden gelen çözüm odaklı yaklaşımımı, yazılım dünyasının dinamikleriyle birleştirerek projelere değer katmayı hedefliyorum.',
+      },
+      skills: {
+        title: 'Yetenekler',
+        subtitle: 'Kullandığım teknolojiler ve güçlü yanlarım',
+      },
+      projects: {
+        title: 'Projeler',
+        subtitle: 'Seçili işler (yer tutucu)',
+        viewAll: 'Tüm projeler için GitHub\'a git',
+      },
+      writing: {
+        title: 'Yazılar',
+        subtitle: 'Medium\'da paylaştıklarım (yer tutucu)',
+      },
+      contact: {
+        title: 'İletişim',
+        subtitle: 'Bir proje fikrin mi var? Beraber havalı bir şeyler çıkaralım.',
+        email: 'E-posta gönder',
+        linkedin: 'LinkedIn\'den yaz',
+      },
+    },
+  },
+  en: {
+    nav: {
+      about: 'About',
+      skills: 'Skills',
+      projects: 'Projects',
+      writing: 'Writing',
+      contact: 'Contact',
+    },
+    hero: {
+      greeting: 'Hello, I am',
+      subtitle: 'I design product-focused, user-friendly interfaces.',
+      bio: 'I am a Mobile & Frontend Developer specialized in the React and React Native ecosystem. Using these technologies, I create performant, scalable, and user-experience-focused digital solutions. I have experience in converting Figma designs into functional interfaces with pixel precision and managing complex application processes. I aim to add value to projects by combining my solution-oriented approach from my business background with the dynamics of the software world.',
+    },
+    sections: {
+      about: {
+        title: 'About',
+        subtitle: 'Who I am, what I do, how I work',
+        content: 'As a Mobile & Frontend Developer specialized in the React and React Native ecosystem, I create performant and scalable digital solutions. I have experience in converting Figma designs into functional interfaces with pixel precision and managing complex application processes. I aim to add value to projects by combining my solution-oriented approach from my business background with the dynamics of the software world.',
+      },
+      skills: {
+        title: 'Skills',
+        subtitle: 'Technologies I use and my strengths',
+      },
+      projects: {
+        title: 'Projects',
+        subtitle: 'Selected works (placeholder)',
+        viewAll: 'View all projects on GitHub',
+      },
+      writing: {
+        title: 'Writing',
+        subtitle: 'What I share on Medium (placeholder)',
+      },
+      contact: {
+        title: 'Contact',
+        subtitle: 'Have a project idea? Let\'s create something cool together.',
+        email: 'Send email',
+        linkedin: 'Write on LinkedIn',
+      },
+    },
+  },
+}
+
 const app = document.querySelector<HTMLDivElement>('#app')
 if (!app) throw new Error('Missing #app element')
 
@@ -27,28 +110,40 @@ app.innerHTML = `
         </a>
 
         <nav class="hidden items-center gap-1 md:flex">
-          ${navLink('#about', 'Hakkımda')}
-          ${navLink('#skills', 'Yetenekler')}
-          ${navLink('#projects', 'Projeler')}
-          ${navLink('#writing', 'Yazılar')}
-          ${navLink('#contact', 'İletişim')}
+          <a href="#about" data-i18n-nav="about" class="rounded-xl px-3 py-2 text-sm font-medium text-slate-300 transition hover:bg-white/5 hover:text-slate-100">Hakkımda</a>
+          <a href="#skills" data-i18n-nav="skills" class="rounded-xl px-3 py-2 text-sm font-medium text-slate-300 transition hover:bg-white/5 hover:text-slate-100">Yetenekler</a>
+          <a href="#projects" data-i18n-nav="projects" class="rounded-xl px-3 py-2 text-sm font-medium text-slate-300 transition hover:bg-white/5 hover:text-slate-100">Projeler</a>
+          <a href="#writing" data-i18n-nav="writing" class="rounded-xl px-3 py-2 text-sm font-medium text-slate-300 transition hover:bg-white/5 hover:text-slate-100">Yazılar</a>
+          <a href="#contact" data-i18n-nav="contact" class="rounded-xl px-3 py-2 text-sm font-medium text-slate-300 transition hover:bg-white/5 hover:text-slate-100">İletişim</a>
         </nav>
 
-        <div class="flex items-center gap-2">
-          <a
-            href="${LINKS.github}"
-            target="_blank"
-            rel="noreferrer"
-            class="hidden rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm font-medium text-slate-200 transition hover:border-white/20 hover:bg-white/10 md:inline-flex"
+        <div class="flex items-center gap-3">
+          <button
+            id="theme-toggle"
+            class="inline-flex items-center justify-center rounded-xl border border-white/10 bg-white/5 p-2.5 text-slate-200 transition hover:border-white/20 hover:bg-white/10"
+            aria-label="Toggle theme"
           >
-            GitHub
-          </a>
-          <a
-            href="#contact"
-            class="inline-flex items-center justify-center rounded-xl bg-gradient-to-tr from-fuchsia-500 to-cyan-400 px-3 py-2 text-sm font-semibold text-slate-950 shadow-lg shadow-fuchsia-500/20 transition hover:brightness-110"
-          >
-            İletişime geç
-          </a>
+            <svg id="sun-icon" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+            </svg>
+            <svg id="moon-icon" class="h-5 w-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+            </svg>
+          </button>
+          <div class="flex items-center gap-1 rounded-xl border border-white/10 bg-white/5 p-1">
+            <button
+              id="lang-tr"
+              class="lang-btn active rounded-lg px-3 py-1.5 text-xs font-medium text-slate-200 transition hover:bg-white/10"
+            >
+              TR
+            </button>
+            <button
+              id="lang-en"
+              class="lang-btn rounded-lg px-3 py-1.5 text-xs font-medium text-slate-400 transition hover:bg-white/10 hover:text-slate-200"
+            >
+              EN
+            </button>
+          </div>
         </div>
       </div>
     </header>
@@ -381,8 +476,86 @@ function articleCard(title: string, meta: string, href: string) {
       <div class="relative">
         <p class="text-xs text-slate-400">${meta}</p>
         <p class="mt-2 text-sm font-semibold text-slate-100">${title}</p>
-        <p class="mt-3 text-sm text-slate-300">Medium’da oku →</p>
+        <p class="mt-3 text-sm text-slate-300">Medium'da oku →</p>
       </div>
     </a>
   `
 }
+
+// Theme toggle functionality
+function initThemeToggle() {
+  const themeToggle = document.getElementById('theme-toggle')
+  const sunIcon = document.getElementById('sun-icon')
+  const moonIcon = document.getElementById('moon-icon')
+  
+  if (!themeToggle || !sunIcon || !moonIcon) return
+  
+  // Check for saved theme preference or default to dark
+  const currentTheme = localStorage.getItem('theme') || 'dark'
+  document.documentElement.classList.toggle('light', currentTheme === 'light')
+  
+  if (currentTheme === 'light') {
+    sunIcon.classList.add('hidden')
+    moonIcon.classList.remove('hidden')
+  } else {
+    sunIcon.classList.remove('hidden')
+    moonIcon.classList.add('hidden')
+  }
+  
+  themeToggle.addEventListener('click', () => {
+    const isLight = document.documentElement.classList.toggle('light')
+    localStorage.setItem('theme', isLight ? 'light' : 'dark')
+    
+    if (isLight) {
+      sunIcon.classList.add('hidden')
+      moonIcon.classList.remove('hidden')
+    } else {
+      sunIcon.classList.remove('hidden')
+      moonIcon.classList.add('hidden')
+    }
+  })
+}
+
+// Language toggle functionality
+function initLanguageToggle() {
+  const langTr = document.getElementById('lang-tr')
+  const langEn = document.getElementById('lang-en')
+  
+  if (!langTr || !langEn) return
+  
+  const currentLang = localStorage.getItem('lang') || 'tr'
+  
+  if (currentLang === 'en') {
+    langTr.classList.remove('active', 'text-slate-200')
+    langTr.classList.add('text-slate-400')
+    langEn.classList.add('active', 'text-slate-200')
+    langEn.classList.remove('text-slate-400')
+  } else {
+    langTr.classList.add('active', 'text-slate-200')
+    langTr.classList.remove('text-slate-400')
+    langEn.classList.remove('active', 'text-slate-200')
+    langEn.classList.add('text-slate-400')
+  }
+  
+  langTr.addEventListener('click', () => {
+    localStorage.setItem('lang', 'tr')
+    langTr.classList.add('active', 'text-slate-200')
+    langTr.classList.remove('text-slate-400')
+    langEn.classList.remove('active', 'text-slate-200')
+    langEn.classList.add('text-slate-400')
+  })
+  
+  langEn.addEventListener('click', () => {
+    localStorage.setItem('lang', 'en')
+    langEn.classList.add('active', 'text-slate-200')
+    langEn.classList.remove('text-slate-400')
+    langTr.classList.remove('active', 'text-slate-200')
+    langTr.classList.add('text-slate-400')
+  })
+}
+
+// Initialize theme and language toggles
+setTimeout(() => {
+  initThemeToggle()
+  initLanguageToggle()
+}, 0)
