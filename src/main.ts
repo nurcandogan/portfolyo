@@ -3,10 +3,21 @@ import './style.css'
 const LINKS = {
   linkedin: 'https://www.linkedin.com/in/nurcan-do%C4%9Fan/',
   github: 'https://github.com/nurcandogan',
+  githubApi: 'https://api.github.com/users/nurcandogan/repos?sort=updated&per_page=7',
   medium: 'https://medium.com/@nurcan.d00',
   mediumRss: 'https://medium.com/feed/@nurcan.d00',
   email: 'mailto:nurcan.d00@gmail.com',
 } as const
+
+interface GitHubRepo {
+  name: string
+  description: string | null
+  html_url: string
+  updated_at: string
+  language: string | null
+  homepage: string | null
+  topics: string[]
+}
 
 interface MediumArticle {
   title: string
@@ -310,27 +321,95 @@ function secondaryCta(href: string, label: string) {
   `
 }
 
-function projectCard(title: string, desc: string, href: string) {
+function getProjectType(repo: GitHubRepo): 'web' | 'mobile' | 'other' {
+  const name = repo.name.toLowerCase()
+  const topics = repo.topics.map(t => t.toLowerCase())
+  
+  if (topics.includes('react-native') || topics.includes('mobile') || name.includes('mobile') || name.includes('app')) {
+    return 'mobile'
+  }
+  if (topics.includes('react') || topics.includes('web') || topics.includes('frontend') || name.includes('web') || repo.homepage) {
+    return 'web'
+  }
+  return 'other'
+}
+
+function getTechnologies(repo: GitHubRepo): string[] {
+  const techs: string[] = []
+  const topics = repo.topics || []
+  const language = repo.language
+  
+  if (language) techs.push(language)
+  
+  // Framework ve teknolojileri topics'den al
+  const commonTechs = ['React', 'TypeScript', 'JavaScript', 'React Native', 'Node.js', 'Vite', 'Tailwind CSS', 'Next.js']
+  commonTechs.forEach(tech => {
+    if (topics.some(t => t.toLowerCase().includes(tech.toLowerCase()))) {
+      if (!techs.includes(tech)) techs.push(tech)
+    }
+  })
+  
+  return techs.slice(0, 4) // Max 4 teknoloji göster
+}
+
+function projectCard(repo: GitHubRepo) {
+  const projectType = getProjectType(repo)
+  const technologies = getTechnologies(repo)
+  const liveUrl = repo.homepage || null
+  const isWeb = projectType === 'web'
+  
   return `
-    <a
-      href="${href}"
-      target="_blank"
-      rel="noreferrer"
-      class="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-black/30 transition hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/10"
-    >
-      <div class="pointer-events-none absolute inset-0 opacity-0 transition duration-500 group-hover:opacity-100">
-        <div class="absolute inset-0 bg-gradient-to-tr from-fuchsia-500/10 via-cyan-400/10 to-emerald-400/10"></div>
-      </div>
-      <div class="relative">
-        <div class="flex items-start justify-between gap-4">
-  <div>
-            <p class="text-sm font-semibold text-slate-100">${title}</p>
-            <p class="mt-2 text-sm text-slate-300">${desc}</p>
-          </div>
-          <span class="rounded-xl border border-white/10 bg-white/5 px-2 py-1 text-xs text-slate-300 transition group-hover:border-white/20 group-hover:bg-white/10">Repo</span>
+    <div class="project-card p-6 flex flex-col">
+      <div class="flex items-start justify-between gap-4 mb-4">
+        <div class="flex-1">
+          <h3 class="text-base font-semibold text-slate-100 mb-2">${repo.name}</h3>
+          <p class="text-sm text-slate-300 line-clamp-2">${repo.description || 'No description available'}</p>
+        </div>
+        <div class="flex items-center gap-2 flex-shrink-0">
+          ${projectType === 'web' 
+            ? '<svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>'
+            : projectType === 'mobile'
+            ? '<svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>'
+            : ''
+          }
         </div>
       </div>
-    </a>
+      
+      ${technologies.length > 0 ? `
+        <div class="flex flex-wrap gap-2 mb-4">
+          ${technologies.map(tech => `
+            <span class="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-xs font-medium text-slate-300">
+              ${tech}
+            </span>
+          `).join('')}
+        </div>
+      ` : ''}
+      
+      <div class="flex items-center gap-3 mt-auto">
+        <a
+          href="${repo.html_url}"
+          target="_blank"
+          rel="noreferrer"
+          class="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs font-medium text-slate-300 transition hover:border-white/20 hover:bg-white/10 hover:text-slate-100"
+          onclick="event.stopPropagation()"
+        >
+          <span>🔗</span>
+          <span>GitHub</span>
+        </a>
+        ${isWeb && liveUrl ? `
+          <a
+            href="${liveUrl}"
+            target="_blank"
+            rel="noreferrer"
+            class="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs font-medium text-slate-300 transition hover:border-white/20 hover:bg-white/10 hover:text-slate-100"
+            onclick="event.stopPropagation()"
+          >
+            <span>👁️</span>
+            <span>Canlı Gör</span>
+          </a>
+        ` : ''}
+      </div>
+    </div>
   `
 }
 
@@ -604,17 +683,61 @@ function renderHomePage() {
   `
 }
 
-function renderProjectsPage() {
+async function fetchGitHubRepos(): Promise<GitHubRepo[]> {
+  try {
+    const response = await fetch(LINKS.githubApi)
+    const repos = await response.json()
+    
+    if (Array.isArray(repos)) {
+      // Evim projesini özel olarak ekle (gizli repo)
+      const evimProject: GitHubRepo = {
+        name: 'evim',
+        description: 'Ev yönetim uygulaması',
+        html_url: 'https://github.com/nurcandogan/evim',
+        updated_at: new Date().toISOString(),
+        language: 'TypeScript',
+        homepage: null,
+        topics: ['react-native', 'mobile', 'typescript'],
+      }
+      
+      const filteredRepos = repos
+        .filter((repo: any) => !repo.fork && repo.name !== 'nurcandogan' && repo.name !== 'portfolyo') // Fork'ları, profil ve portfolyo'yu filtrele
+        .slice(0, 6) // 6 repo al, evim'i ekleyince 7 olacak
+        .map((repo: any) => ({
+          name: repo.name || '',
+          description: repo.description || null,
+          html_url: repo.html_url || LINKS.github,
+          updated_at: repo.updated_at || '',
+          language: repo.language || null,
+          homepage: repo.homepage || null,
+          topics: repo.topics || [],
+        }))
+      
+      // Evim projesini başa ekle
+      return [evimProject, ...filteredRepos]
+    }
+    return []
+  } catch (error) {
+    console.error('Error fetching GitHub repos:', error)
+    return []
+  }
+}
+
+function renderProjectsPage(repos: GitHubRepo[] = []) {
+  const reposHtml = repos.length > 0
+    ? repos.map(repo => projectCard(repo)).join('')
+    : `
+      <div class="text-center py-8 text-slate-400 col-span-3">
+        <p>Projeler yükleniyor...</p>
+      </div>
+    `
+  
   return `
     <section class="mx-auto max-w-6xl px-4 py-14 sm:pt-20">
-      ${sectionTitle('Projeler', 'Seçili işler (yer tutucu)', 'projects')}
-      <div class="mt-8 grid gap-4 md:grid-cols-2">
-        ${projectCard('Project One', 'Kısa açıklama: problem → çözüm → etki.', LINKS.github)}
-        ${projectCard('Project Two', 'Kısa açıklama: teknoloji, rol, çıktı.', LINKS.github)}
-        ${projectCard('Project Three', 'Kısa açıklama: kullanıcı değeri, metrik.', LINKS.github)}
-        ${projectCard('Project Four', 'Kısa açıklama: demo, repo, case study.', LINKS.github)}
+      <div class="mt-8 grid gap-x-10 gap-y-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" id="projects-container">
+        ${reposHtml}
       </div>
-      <div class="mt-6">
+      <div class="mt-10 flex justify-center">
         <a
           href="${LINKS.github}"
           target="_blank"
@@ -624,7 +747,7 @@ function renderProjectsPage() {
           <span data-i18n-projects-link>Tüm projeler için GitHub'a git</span>
           <span class="text-slate-400">→</span>
         </a>
-    </div>
+      </div>
     </section>
   `
 }
@@ -687,7 +810,7 @@ function renderBlogPage(articles: MediumArticle[] = []) {
       <div class="mt-8 grid gap-4" id="blog-articles">
         ${articlesHtml}
       </div>
-      <div class="mt-14 ">
+      <div class="mt-14 flex justify-center">
         <a
           href="${LINKS.medium}"
           target="_blank"
@@ -695,9 +818,6 @@ function renderBlogPage(articles: MediumArticle[] = []) {
           class="email-button"
         >
           <span data-i18n-blog-read>Tüm yazıları gör</span>
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-          </svg>
         </a>
       </div>
     </section>
@@ -727,6 +847,13 @@ function navigateTo(route: string) {
       break
     case 'projects':
       contentEl.innerHTML = renderProjectsPage()
+      // Fetch GitHub repos asynchronously
+      fetchGitHubRepos().then((repos: GitHubRepo[]) => {
+        const projectsContainer = document.getElementById('projects-container')
+        if (projectsContainer && repos.length > 0) {
+          projectsContainer.innerHTML = repos.map((repo: GitHubRepo) => projectCard(repo)).join('')
+        }
+      })
       break
     case 'blog':
       contentEl.innerHTML = renderBlogPage()

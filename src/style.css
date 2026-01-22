@@ -368,3 +368,26 @@ ul {
           0 0 2.5em 2em var(--glow-spread-color),
           inset 0 0 .5em .25em var(--glow-color);
 }
+
+/* From Uiverse.io by SteveBloX */
+.project-card {
+  width: 100%;
+  max-width: 400px;
+  min-height: 320px;
+  backdrop-filter: blur(7px);
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 26px;
+  box-shadow: 35px 35px 68px 0px rgba(157, 177, 255, 0.2), inset -8px -8px 16px 0px rgba(157, 177, 255, 0.1), inset 0px 11px 28px 0px rgba(255, 255, 255, 0.1);
+  transition: all 0.3s;
+  cursor: pointer;
+  border: none;
+}
+
+.project-card:hover {
+  box-shadow: 35px 35px 68px 0px rgba(157, 177, 255, 0.5);
+}
+
+.project-card:active {
+  transform: scale(0.95);
+  border: 1px solid rgba(59, 130, 246, 0.8);
+}
