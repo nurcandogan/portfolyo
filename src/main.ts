@@ -38,6 +38,7 @@ const translations = {
       greeting: 'Merhaba, ben',
       subtitle: 'Ürün odaklı, kullanıcı dostu arayüzler tasarlarım.',
       bio: 'React ve React Native ekosisteminde uzmanlaşmış bir Mobil & Frontend Geliştiriciyim. Bu teknolojileri kullanarak performanslı, ölçeklenebilir ve kullanıcı deneyimi odaklı dijital çözümler üretiyorum. Figma tasarımlarını piksel hassasiyetinde işlevsel arayüzlere dönüştürme ve karmaşık uygulama süreçlerini yönetme konusunda deneyim sahibiyim. İş dünyasındaki operasyonel geçmişimden gelen çözüm odaklı yaklaşımımı, yazılım dünyasının dinamikleriyle birleştirerek projelere değer katmayı hedefliyorum.',
+      cta: 'Bir proje fikrin mi var? Beraber havalı bir şeyler çıkaralım.',
     },
     sections: {
       about: {
@@ -82,6 +83,7 @@ const translations = {
       greeting: 'Hello, I am',
       subtitle: 'I design product-focused, user-friendly interfaces.',
       bio: 'I am a Mobile & Frontend Developer specialized in the React and React Native ecosystem. Using these technologies, I create performant, scalable, and user-experience-focused digital solutions. I have experience in converting Figma designs into functional interfaces with pixel precision and managing complex application processes. I aim to add value to projects by combining my solution-oriented approach from my business background with the dynamics of the software world.',
+      cta: 'Have a project idea? Let\'s create something cool together.',
     },
     sections: {
       about: {
@@ -139,7 +141,6 @@ app.innerHTML = `
         <nav class="hidden items-center gap-1 md:flex">
           <button data-route="projects" data-i18n-nav="projects" class="nav-link rounded-xl px-3 py-2 text-sm font-medium text-slate-300 transition hover:bg-white/5 hover:text-slate-100">Projeler</button>
           <button data-route="blog" data-i18n-nav="blog" class="nav-link rounded-xl px-3 py-2 text-sm font-medium text-slate-300 transition hover:bg-white/5 hover:text-slate-100">Blog</button>
-          <button data-route="contact" data-i18n-nav="contact" class="nav-link rounded-xl px-3 py-2 text-sm font-medium text-slate-300 transition hover:bg-white/5 hover:text-slate-100">İletişim</button>
           <button data-route="about" data-i18n-nav="about" class="nav-link rounded-xl px-3 py-2 text-sm font-medium text-slate-300 transition hover:bg-white/5 hover:text-slate-100">Hakkımda</button>
         </nav>
 
@@ -177,23 +178,23 @@ app.innerHTML = `
     <main id="top" class="relative flex flex-col min-h-screen">
       <div id="app-content" class="flex-1">
         <!-- Hero -->
-        <section class="mx-auto max-w-6xl px-4 pb-14 pt-14 sm:pt-20">
-          <div class="flex flex-col items-center text-center">
+        <section class="mx-auto max-w-6xl px-4 pb-20 pt-24 sm:pt-32 min-h-[80vh] flex items-center">
+          <div class="flex flex-col items-center text-center w-full">
             <div class="max-w-4xl">
              
-              <h1 class="mt-10 text-balance text-4xl font-semibold tracking-tight sm:text-5xl">
+              <h1 class="mt-0 text-balance text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
                 <span data-i18n-hero-greeting>Merhaba, ben</span> <span class="bg-gradient-to-tr from-fuchsia-400 via-cyan-300 to-emerald-300 bg-clip-text text-transparent">Nurcan</span>.
-                <span class="block text-slate-300" data-i18n-hero-subtitle>Ürün odaklı, kullanıcı dostu arayüzler tasarlarım.</span>
+                <span class="block text-slate-300 mt-2" data-i18n-hero-subtitle>Ürün odaklı, kullanıcı dostu arayüzler tasarlarım.</span>
               </h1>
 
-              <p class="mt-5 mx-auto max-w-3xl text-pretty text-base leading-7 text-slate-300" data-i18n-hero-bio>
+              <p class="mt-8 mx-auto max-w-3xl text-pretty text-lg leading-8 text-slate-300 sm:text-xl" data-i18n-hero-bio>
                 React ve React Native ekosisteminde uzmanlaşmış bir Mobil & Frontend Geliştiriciyim. Bu teknolojileri kullanarak performanslı,
                 ölçeklenebilir ve kullanıcı deneyimi odaklı dijital çözümler üretiyorum. Figma tasarımlarını piksel hassasiyetinde işlevsel
                 arayüzlere dönüştürme ve karmaşık uygulama süreçlerini yönetme konusunda deneyim sahibiyim. İş dünyasındaki operasyonel geçmişimden
                 gelen çözüm odaklı yaklaşımımı, yazılım dünyasının dinamikleriyle birleştirerek projelere değer katmayı hedefliyorum.
               </p>
 
-              <div class="mt-10 flex justify-center">
+              <div class="mt-16 flex justify-center">
                 <ul class="example-2">
                   <li class="icon-content">
                     <a
@@ -255,24 +256,10 @@ app.innerHTML = `
                   </li>
                 </ul>
               </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Contact Section -->
-        <section id="contact" class="mx-auto max-w-6xl px-4 py-16">
-          <div class="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-8 shadow-2xl shadow-black/40">
-            <div class="absolute inset-0 bg-gradient-to-tr from-fuchsia-500/15 via-cyan-400/10 to-emerald-400/10"></div>
-            <div class="relative">
-              <h2 class="text-2xl font-semibold tracking-tight text-slate-100" data-i18n-section-title="contact">İletişim</h2>
-              <p class="mt-2 max-w-2xl text-slate-300" data-i18n-section-subtitle="contact">
+              
+              <p class="mt-16 text-center text-lg text-slate-300 max-w-2xl mx-auto sm:text-xl" data-i18n-hero-cta>
                 Bir proje fikrin mi var? Beraber havalı bir şeyler çıkaralım.
               </p>
-              <div class="mt-6 flex flex-wrap gap-3">
-                <a href="${LINKS.email}" class="email-button" data-i18n-contact-email>E-posta gönder</a>
-                <a href="${LINKS.linkedin}" target="_blank" rel="noreferrer" class="inline-flex items-center justify-center rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-slate-200 transition hover:border-white/20 hover:bg-white/10 hover:text-slate-100" data-i18n-contact-linkedin>LinkedIn'den yaz</a>
-                ${secondaryCta(LINKS.github, 'GitHub')}
-              </div>
             </div>
           </div>
         </section>
@@ -308,18 +295,6 @@ function sectionTitle(title: string, subtitle: string, sectionKey?: string) {
   `
 }
 
-function secondaryCta(href: string, label: string) {
-  return `
-    <a
-      href="${href}"
-      target="_blank"
-      rel="noreferrer"
-      class="inline-flex items-center justify-center rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-slate-200 transition hover:border-white/20 hover:bg-white/10 hover:text-slate-100"
-    >
-      ${label}
-    </a>
-  `
-}
 
 function getProjectType(repo: GitHubRepo): 'web' | 'mobile' | 'other' {
   const name = repo.name.toLowerCase()
@@ -581,23 +556,23 @@ function initLanguageToggle() {
 function renderHomePage() {
   return `
     <!-- Hero -->
-    <section class="mx-auto max-w-6xl px-4 pb-14 pt-14 sm:pt-20">
-      <div class="flex flex-col items-center text-center">
+    <section class="mx-auto max-w-6xl px-4 pb-20 pt-24 sm:pt-32 min-h-[80vh] flex items-center">
+      <div class="flex flex-col items-center text-center w-full">
         <div class="max-w-4xl">
          
-          <h1 class="mt-10 text-balance text-4xl font-semibold tracking-tight sm:text-5xl">
+          <h1 class="mt-0 text-balance text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
             <span data-i18n-hero-greeting>Merhaba, ben</span> <span class="bg-gradient-to-tr from-fuchsia-400 via-cyan-300 to-emerald-300 bg-clip-text text-transparent">Nurcan</span>.
-            <span class="block text-slate-300" data-i18n-hero-subtitle>Ürün odaklı, kullanıcı dostu arayüzler tasarlarım.</span>
+            <span class="block text-slate-300 mt-2" data-i18n-hero-subtitle>Ürün odaklı, kullanıcı dostu arayüzler tasarlarım.</span>
           </h1>
 
-          <p class="mt-5 mx-auto max-w-3xl text-pretty text-base leading-7 text-slate-300" data-i18n-hero-bio>
+          <p class="mt-8 mx-auto max-w-3xl text-pretty text-lg leading-8 text-slate-300 sm:text-xl" data-i18n-hero-bio>
             React ve React Native ekosisteminde uzmanlaşmış bir Mobil & Frontend Geliştiriciyim. Bu teknolojileri kullanarak performanslı,
             ölçeklenebilir ve kullanıcı deneyimi odaklı dijital çözümler üretiyorum. Figma tasarımlarını piksel hassasiyetinde işlevsel
             arayüzlere dönüştürme ve karmaşık uygulama süreçlerini yönetme konusunda deneyim sahibiyim. İş dünyasındaki operasyonel geçmişimden
             gelen çözüm odaklı yaklaşımımı, yazılım dünyasının dinamikleriyle birleştirerek projelere değer katmayı hedefliyorum.
           </p>
 
-          <div class="mt-10 flex justify-center">
+          <div class="mt-16 flex justify-center">
             <ul class="example-2">
               <li class="icon-content">
                 <a
@@ -659,24 +634,10 @@ function renderHomePage() {
               </li>
             </ul>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="mx-auto max-w-6xl px-4 py-16">
-      <div class="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-8 shadow-2xl shadow-black/40">
-        <div class="absolute inset-0 bg-gradient-to-tr from-fuchsia-500/15 via-cyan-400/10 to-emerald-400/10"></div>
-        <div class="relative">
-          <h2 class="text-2xl font-semibold tracking-tight text-slate-100" data-i18n-section-title="contact">İletişim</h2>
-          <p class="mt-2 max-w-2xl text-slate-300" data-i18n-section-subtitle="contact">
+          
+          <p class="mt-16 text-center text-lg text-slate-300 max-w-2xl mx-auto sm:text-xl" data-i18n-hero-cta>
             Bir proje fikrin mi var? Beraber havalı bir şeyler çıkaralım.
           </p>
-          <div class="mt-6 flex flex-wrap gap-3">
-            <a href="${LINKS.email}" class="email-button" data-i18n-contact-email>E-posta gönder</a>
-            <a href="${LINKS.linkedin}" target="_blank" rel="noreferrer" class="inline-flex items-center justify-center rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-slate-200 transition hover:border-white/20 hover:bg-white/10 hover:text-slate-100" data-i18n-contact-linkedin>LinkedIn'den yaz</a>
-            ${secondaryCta(LINKS.github, 'GitHub')}
-          </div>
         </div>
       </div>
     </section>
