@@ -748,6 +748,8 @@ async function fetchMediumArticles(): Promise<MediumArticle[]> {
   }
 }
 
+
+
 function renderBlogPage(articles: MediumArticle[] = []) {
   const articlesHtml = articles.length > 0
     ? articles.map(article => {
