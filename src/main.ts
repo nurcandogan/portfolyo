@@ -288,16 +288,7 @@ function renderFooter() {
   `
 }
 
-function sectionTitle(title: string, subtitle: string, sectionKey?: string) {
-  const titleAttr = sectionKey ? `data-i18n-section-title="${sectionKey}"` : ''
-  const subtitleAttr = sectionKey ? `data-i18n-section-subtitle="${sectionKey}"` : ''
-  return `
-    <div class="flex flex-col gap-2">
-      <h2 class="text-2xl font-semibold tracking-tight text-slate-100" ${titleAttr}>${title}</h2>
-      <p class="text-sm text-slate-300" ${subtitleAttr}>${subtitle}</p>
-    </div>
-  `
-}
+
 
 
 function getProjectType(repo: GitHubRepo): 'web' | 'mobile' | 'other' {
