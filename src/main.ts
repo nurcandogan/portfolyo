@@ -44,7 +44,9 @@ const translations = {
       about: {
         title: 'Hakkımda',
         subtitle: 'Ben kimim, ne yaparım, nasıl çalışırım?',
-        content: 'React ve React Native ekosisteminde uzmanlaşmış bir Mobil & Frontend Geliştirici olarak, performanslı ve ölçeklenebilir dijital çözümler üretiyorum. Figma tasarımlarını piksel hassasiyetinde işlevsel arayüzlere dönüştürme ve karmaşık uygulama süreçlerini yönetme konusunda deneyim sahibiyim. İş dünyasındaki operasyonel geçmişimden gelen çözüm odaklı yaklaşımımı, yazılım dünyasının dinamikleriyle birleştirerek projelere değer katmayı hedefliyorum.',
+        content: 'İşletme ve pazarlama alanındaki akademik altyapım ve profesyonel iş hayatındaki operasyonel deneyimlerim, kariyerimin ilk yıllarında bana stratejik bir vizyon ve çözüm odaklı bir disiplin kazandırdı. Teknolojiye olan ilgimi profesyonel bir boyuta taşımaya karar vererek 2023 yılında kariyerime farklı bir yön verdim ve yazılım sektörüne geçiş yaptım. Bu süreçten itibaren odağımı tamamen Frontend ve mobil uygulama geliştirme üzerine yoğunlaştırarak React ve React Native teknolojilerinde derinleştim. Bugün, geçmişten gelen analiz yeteneğimi teknik donanımımla harmanlıyor; piksel hassasiyetinde, ölçeklenebilir ve kullanıcı dostu arayüzler tasarlıyorum. Öğrenme tutkumun bir parçası olarak edindiğim teknik deneyimleri ise Medium üzerinden paylaşarak topluluğa değer katmayı sürdürüyorum.',
+        languages: 'Programlama Dilleri',
+        frameworks: 'Framework\'ler ve Kütüphaneler',
       },
       skills: {
         title: 'Yetenekler',
@@ -89,7 +91,9 @@ const translations = {
       about: {
         title: 'About',
         subtitle: 'Who I am, what I do, how I work',
-        content: 'As a Mobile & Frontend Developer specialized in the React and React Native ecosystem, I create performant and scalable digital solutions. I have experience in converting Figma designs into functional interfaces with pixel precision and managing complex application processes. I aim to add value to projects by combining my solution-oriented approach from my business background with the dynamics of the software world.',
+        content: 'My academic background in business and marketing, along with my professional operational experiences, gave me a strategic vision and solution-oriented discipline in the early years of my career. Deciding to take my interest in technology to a professional level, I took a different direction in my career in 2023 and transitioned to the software industry. Since then, I have focused entirely on frontend and mobile application development, deepening my expertise in React and React Native technologies. Today, I combine my analytical ability from the past with my technical skills; I design pixel-perfect, scalable, and user-friendly interfaces. As part of my passion for learning, I continue to add value to the community by sharing my technical experiences on Medium.',
+        languages: 'Programming Languages',
+        frameworks: 'Frameworks & Libraries',
       },
       skills: {
         title: 'Skills',
@@ -332,7 +336,10 @@ function getTechnologies(repo: GitHubRepo): string[] {
     'donna-bianca': ['React', 'TypeScript', 'Vite', 'Tailwind CSS', 'Framer Motion', 'React Router'],
     'SerenitaKisiselGelisim': ['React', 'TypeScript', 'Vite'],
     'Sahiplen': ['HTML', 'CSS', 'JavaScript'],
-    'ojsNutrition': ['React Native', 'TypeScript', 'Expo', 'Tailwind CSS', 'Async Storage', 'Zustand', 'Formik', 'React Navigation']
+    'ojsNutrition': ['React Native', 'TypeScript', 'Expo', 'Tailwind CSS', 'Async Storage', 'Zustand', 'Formik', 'React Navigation'],
+    'StarWars-Proje': ['React', 'TypeScript', 'Vite'],
+    'Focus-Mood': ['React Native', 'TypeScript', 'Expo'],
+    'portfolyo': ['TypeScript', 'Vite', 'Tailwind CSS']
   }
   
   // Eğer proje için özel teknoloji bilgisi varsa kullan
@@ -588,6 +595,9 @@ function updateContent(lang: 'tr' | 'en') {
   const heroBio = document.querySelector('[data-i18n-hero-bio]')
   if (heroBio) heroBio.textContent = t.hero.bio
   
+  const heroCta = document.querySelector('[data-i18n-hero-cta]')
+  if (heroCta) heroCta.textContent = t.hero.cta
+  
   // Update section titles
   const sectionTitles = document.querySelectorAll('[data-i18n-section-title]')
   sectionTitles.forEach((el) => {
@@ -619,6 +629,13 @@ function updateContent(lang: 'tr' | 'en') {
   // Update about content
   const aboutContent = document.querySelector('[data-i18n-section-content="about"]')
   if (aboutContent) aboutContent.textContent = t.sections.about.content
+  
+  // Update about languages and frameworks titles
+  const aboutLanguages = document.querySelector('[data-i18n-about-languages]')
+  if (aboutLanguages) aboutLanguages.textContent = t.sections.about.languages
+  
+  const aboutFrameworks = document.querySelector('[data-i18n-about-frameworks]')
+  if (aboutFrameworks) aboutFrameworks.textContent = t.sections.about.frameworks
   
   // Update blog content
   const blogRead = document.querySelector('[data-i18n-blog-read]')
@@ -764,6 +781,21 @@ async function fetchGitHubRepos(): Promise<GitHubRepo[]> {
     const repos = await response.json()
     
     if (Array.isArray(repos)) {
+      // Gösterilecek sabit proje listesi (sıralama önemli)
+      const allowedProjects = [
+        'evim',
+        'movie-app',
+        'my-expo-app',
+        'my-chatt',
+        'donna-bianca',
+        'SerenitaKisiselGelisim',
+        'Sahiplen',
+        'ojsNutrition',
+        'StarWars-Proje',
+        'Focus-Mood',
+        'portfolyo'
+      ]
+      
       // Özel proje bilgileri
       const projectInfo: Record<string, { description: string; type?: 'web' | 'mobile' }> = {
         'evim': {
@@ -797,42 +829,82 @@ async function fetchGitHubRepos(): Promise<GitHubRepo[]> {
         'ojsNutrition': {
           description: 'OJS Nutrition - Beslenme takip ve danışmanlık mobil uygulaması',
           type: 'mobile'
+        },
+        'StarWars-Proje': {
+          description: 'Star Wars Projesi - Star Wars evreni hakkında bilgi ve karakterler',
+          type: 'web'
+        },
+        'Focus-Mood': {
+          description: 'Focus Mood - Odaklanma ve ruh hali takip uygulaması',
+          type: 'mobile'
+        },
+        'portfolyo': {
+          description: 'Portfolyo - Kişisel portfolyo web sitesi',
+          type: 'web'
         }
       }
       
-      const filteredRepos = repos
-        .filter((repo: any) => !repo.fork && repo.name !== 'nurcandogan' && repo.name !== 'portfolyo')
-        .slice(0, 9)
-        .map((repo: any) => {
-          const info = projectInfo[repo.name]
+      // Repo'ları bir map'e çevir (hızlı erişim için)
+      const reposMap = new Map<string, any>()
+      repos.forEach((repo: any) => {
+        if (!repo.fork && allowedProjects.includes(repo.name)) {
+          reposMap.set(repo.name, repo)
+        }
+      })
+      
+      // Sadece izin verilen projeleri, belirlenen sırayla al
+      const filteredRepos = allowedProjects
+        .map((projectName) => {
+          const repo = reposMap.get(projectName)
+          if (!repo) return null
+          
+          const info = projectInfo[projectName]
           return {
-            name: repo.name || '',
-            description: info?.description || repo.description || `${repo.name} projesi`,
-            html_url: repo.html_url || LINKS.github,
+            name: repo.name || projectName,
+            description: info?.description || repo.description || `${projectName} projesi`,
+            html_url: repo.html_url || `https://github.com/nurcandogan/${projectName}`,
             updated_at: repo.updated_at || '',
             language: repo.language || null,
             homepage: repo.homepage || null,
             topics: repo.topics || [],
           }
         })
+        .filter((repo): repo is GitHubRepo => repo !== null)
       
-      // Evim projesini başa ekle
-      const evimProject: GitHubRepo = {
-        name: 'evim',
-        description: projectInfo['evim'].description,
-        html_url: 'https://github.com/nurcandogan/evim',
-        updated_at: new Date().toISOString(),
-        language: 'TypeScript',
-        homepage: null,
-        topics: ['react-native', 'mobile', 'typescript', 'expo'],
-      }
-      
-      return [evimProject, ...filteredRepos]
+      return filteredRepos
     }
     return []
   } catch (error) {
     console.error('Error fetching GitHub repos:', error)
     return []
+  }
+}
+
+async function getAllTechnologies(): Promise<{ languages: string[], frameworks: string[] }> {
+  try {
+    // Programming Languages
+    const languages = [
+      'HTML', 'CSS', 'SASS', 'JavaScript', 'TypeScript', 'React', 'React Native'
+    ]
+    
+    // Frameworks & Libraries
+    const frameworks = [
+      'Expo',
+      'Vite', 'NPM', 'Git', 'GitHub',
+      'Tailwind CSS', 'Bootstrap', 'Nativewind', 'Shadcn', 'Ant Design', 'CSS-in-JS',
+      'Zustand', 'React Hook Form',
+      'React Navigation', 'React Router',
+      'Firebase', 'Async Storage', 'Axios', 'Fetch API', 'Framer Motion', 'Formik', 'Yup',
+      'Visual Studio Code'
+    ]
+    
+    return {
+      languages: languages,
+      frameworks: frameworks
+    }
+  } catch (error) {
+    console.error('Error fetching technologies:', error)
+    return { languages: [], frameworks: [] }
   }
 }
 
@@ -868,12 +940,36 @@ function renderProjectsPage(repos: GitHubRepo[] = []) {
 function renderAboutPage() {
   return `
     <section class="mx-auto max-w-6xl px-4 py-14 sm:pt-20">
-      ${sectionTitle('Hakkımda', 'Ben kimim, ne yaparım, nasıl çalışırım?', 'about')}
-      <div class="mt-8">
-        <p class="text-base leading-7 text-slate-300" data-i18n-section-content="about">
-          React ve React Native ekosisteminde uzmanlaşmış bir Mobil & Frontend Geliştirici olarak, performanslı ve ölçeklenebilir dijital çözümler üretiyorum. Figma tasarımlarını piksel hassasiyetinde işlevsel arayüzlere dönüştürme ve karmaşık uygulama süreçlerini yönetme konusunda deneyim sahibiyim. İş dünyasındaki operasyonel geçmişimden gelen çözüm odaklı yaklaşımımı, yazılım dünyasının dinamikleriyle birleştirerek projelere değer katmayı hedefliyorum.
-    </p>
-  </div>
+      <div class="mt-12 flex flex-col lg:flex-row items-center lg:items-start gap-8 lg:gap-12">
+        <div class="flex-shrink-0">
+          <img 
+            src="/1763043842796.jpeg" 
+            alt="Nurcan Doğan" 
+            class="w-64 h-64 lg:w-80 lg:h-80 rounded-2xl object-cover shadow-xl border border-white/10"
+          />
+        </div>
+        <div class="flex-1 text-center lg:text-left">
+          <p class="mt-6 text-base leading-7 text-slate-300" data-i18n-section-content="about">
+            İşletme ve pazarlama alanındaki akademik altyapım ve profesyonel iş hayatındaki operasyonel deneyimlerim, kariyerimin ilk yıllarında bana stratejik bir vizyon ve çözüm odaklı bir disiplin kazandırdı. Teknolojiye olan ilgimi profesyonel bir boyuta taşımaya karar vererek 2023 yılında kariyerime farklı bir yön verdim ve yazılım sektörüne geçiş yaptım. Bu süreçten itibaren odağımı tamamen Frontend ve mobil uygulama geliştirme üzerine yoğunlaştırarak React ve React Native teknolojilerinde derinleştim. Bugün, geçmişten gelen analiz yeteneğimi teknik donanımımla harmanlıyor; piksel hassasiyetinde, ölçeklenebilir ve kullanıcı dostu arayüzler tasarlıyorum. Öğrenme tutkumun bir parçası olarak edindiğim teknik deneyimleri ise Medium üzerinden paylaşarak topluluğa değer katmayı sürdürüyorum.
+          </p>
+        </div>
+      </div>
+      
+      <div class="mt-12 space-y-8">
+        <div>
+          <h3 class="text-xl font-semibold text-slate-100 mb-4 text-center lg:text-left" data-i18n-about-languages>Programlama Dilleri</h3>
+          <div id="languages-container" class="flex flex-wrap gap-3 justify-center lg:justify-start">
+            <div class="text-slate-400 text-sm">Yükleniyor...</div>
+          </div>
+        </div>
+        
+        <div>
+          <h3 class="text-xl font-semibold text-slate-100 mb-4 text-center lg:text-left" data-i18n-about-frameworks>Framework'ler ve Kütüphaneler</h3>
+          <div id="frameworks-container" class="flex flex-wrap gap-3 justify-center lg:justify-start">
+            <div class="text-slate-400 text-sm">Yükleniyor...</div>
+          </div>
+        </div>
+      </div>
     </section>
   `
 }
@@ -910,7 +1006,7 @@ function renderBlogPage(articles: MediumArticle[] = []) {
       }).join('')
     : `
       <div class="text-center py-8 text-slate-400">
-        <p>Yazılar yükleniyor...</p>
+        <p>Yükleniyor...</p>
   </div>
 `
 
@@ -985,6 +1081,31 @@ function navigateTo(route: string) {
       break
     case 'about':
       contentEl.innerHTML = renderAboutPage()
+      // Fetch and display technologies
+      getAllTechnologies().then(({ languages, frameworks }) => {
+        const languagesContainer = document.getElementById('languages-container')
+        const frameworksContainer = document.getElementById('frameworks-container')
+        
+        if (languagesContainer && languages.length > 0) {
+          languagesContainer.innerHTML = languages.map(tech => `
+            <span class="inline-flex items-center rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-slate-300 hover:bg-white/10 transition">
+              ${tech}
+            </span>
+          `).join('')
+        } else if (languagesContainer) {
+          languagesContainer.innerHTML = '<div class="text-slate-400 text-sm">Yükleniyor...</div>'
+        }
+        
+        if (frameworksContainer && frameworks.length > 0) {
+          frameworksContainer.innerHTML = frameworks.map(tech => `
+            <span class="inline-flex items-center rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-slate-300 hover:bg-white/10 transition">
+              ${tech}
+            </span>
+          `).join('')
+        } else if (frameworksContainer) {
+          frameworksContainer.innerHTML = '<div class="text-slate-400 text-sm">Yükleniyor...</div>'
+        }
+      })
       break
     case 'contact':
       contentEl.innerHTML = renderHomePage()
