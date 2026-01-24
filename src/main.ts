@@ -3,7 +3,7 @@ import './style.css'
 const LINKS = {
   linkedin: 'https://www.linkedin.com/in/nurcan-do%C4%9Fan/',
   github: 'https://github.com/nurcandogan',
-  githubApi: 'https://api.github.com/users/nurcandogan/repos?sort=updated&per_page=7',
+  githubApi: 'https://api.github.com/users/nurcandogan/repos?sort=updated&per_page=20',
   medium: 'https://medium.com/@nurcan.d00',
   mediumRss: 'https://medium.com/feed/@nurcan.d00',
   email: 'mailto:nurcan.d00@gmail.com',
@@ -297,15 +297,21 @@ function sectionTitle(title: string, subtitle: string, sectionKey?: string) {
 
 
 function getProjectType(repo: GitHubRepo): 'web' | 'mobile' | 'other' {
-  const name = repo.name.toLowerCase()
   const topics = repo.topics.map(t => t.toLowerCase())
+  const name = repo.name.toLowerCase()
   
-  if (topics.includes('react-native') || topics.includes('mobile') || name.includes('mobile') || name.includes('app')) {
+  // Özel proje tipleri
+  const mobileProjects = ['evim', 'movie-app', 'my-expo-app', 'my-chatt', 'ojsNutrition']
+  const webProjects = ['donna-bianca', 'SerenitaKisiselGelisim', 'Sahiplen']
+  
+  if (mobileProjects.includes(repo.name) || topics.includes('react-native') || topics.includes('mobile') || name.includes('mobile') || name.includes('app') || topics.includes('android') || topics.includes('ios')) {
     return 'mobile'
   }
-  if (topics.includes('react') || topics.includes('web') || topics.includes('frontend') || name.includes('web') || repo.homepage) {
+  
+  if (webProjects.includes(repo.name) || topics.includes('react') || topics.includes('web') || topics.includes('frontend') || name.includes('web') || repo.homepage || topics.includes('website') || topics.includes('pwa')) {
     return 'web'
   }
+  
   return 'other'
 }
 
@@ -314,17 +320,103 @@ function getTechnologies(repo: GitHubRepo): string[] {
   const topics = repo.topics || []
   const language = repo.language
   
+  // Ana dili ekle
   if (language) techs.push(language)
   
-  // Framework ve teknolojileri topics'den al
-  const commonTechs = ['React', 'TypeScript', 'JavaScript', 'React Native', 'Node.js', 'Vite', 'Tailwind CSS', 'Next.js']
-  commonTechs.forEach(tech => {
-    if (topics.some(t => t.toLowerCase().includes(tech.toLowerCase()))) {
-      if (!techs.includes(tech)) techs.push(tech)
+  // Özel proje teknolojileri (package.json'dan alınan gerçek veriler)
+  const projectTechs: Record<string, string[]> = {
+    'evim': ['React Native', 'TypeScript', 'Expo', 'React'],
+    'movie-app': ['React Native', 'TypeScript', 'Expo', 'React Navigation', 'Tailwind CSS', 'Axios'],
+    'my-expo-app': ['React Native', 'TypeScript', 'Expo', 'Tailwind CSS'],
+    'my-chatt': ['React Native', 'TypeScript', 'Expo', 'Firebase', 'Async Storage', 'Tailwind CSS'],
+    'donna-bianca': ['React', 'TypeScript', 'Vite', 'Tailwind CSS', 'Framer Motion', 'React Router'],
+    'SerenitaKisiselGelisim': ['React', 'TypeScript', 'Vite'],
+    'Sahiplen': ['HTML', 'CSS', 'JavaScript'],
+    'ojsNutrition': ['React Native', 'TypeScript', 'Expo', 'Tailwind CSS', 'Async Storage', 'Zustand', 'Formik', 'React Navigation']
+  }
+  
+  // Eğer proje için özel teknoloji bilgisi varsa kullan
+  if (projectTechs[repo.name]) {
+    return projectTechs[repo.name]
+  }
+  
+  // Genel teknoloji tespiti (diğer projeler için)
+  const techMap = {
+    // React ekosistemi
+    'react': ['React'],
+    'react-native': ['React Native'],
+    'next': ['Next.js'],
+    'nextjs': ['Next.js'],
+    'expo': ['Expo'],
+    
+    // JavaScript/TypeScript
+    'typescript': ['TypeScript'],
+    'javascript': ['JavaScript'],
+    'js': ['JavaScript'],
+    'ts': ['TypeScript'],
+    
+    // Build tools
+    'vite': ['Vite'],
+    'webpack': ['Webpack'],
+    
+    // State management
+    'redux': ['Redux'],
+    'zustand': ['Zustand'],
+    
+    // Storage
+    'storage': ['Storage'],
+    'asyncstorage': ['Async Storage'],
+    'firebase': ['Firebase'],
+    
+    // Styling
+    'tailwind': ['Tailwind CSS'],
+    'styled-components': ['Styled Components'],
+    'css': ['CSS'],
+    
+    // Navigation
+    'navigation': ['React Navigation'],
+    
+    // Other
+    'axios': ['Axios'],
+    'framer-motion': ['Framer Motion'],
+    'router': ['React Router'],
+  }
+  
+  // Topics'ten teknolojileri ekle
+  topics.forEach(topic => {
+    const lowerTopic = topic.toLowerCase()
+    Object.entries(techMap).forEach(([key, values]) => {
+      if (lowerTopic.includes(key)) {
+        values.forEach(value => {
+          if (!techs.includes(value)) techs.push(value)
+        })
+      }
+    })
+  })
+  
+  // Temizleme ve sıralama
+  const cleanedTechs = [...new Set(techs)]
+  
+  // Önem sırasına göre düzenle
+  const priorityOrder = [
+    'React Native', 'Expo', 'React', 'Next.js',
+    'TypeScript', 'JavaScript',
+    'Vite', 'Tailwind CSS',
+    'Firebase', 'Async Storage',
+    'React Navigation', 'React Router'
+  ]
+  
+  const sortedTechs = []
+  priorityOrder.forEach(tech => {
+    const index = cleanedTechs.indexOf(tech)
+    if (index > -1) {
+      sortedTechs.push(tech)
+      cleanedTechs.splice(index, 1)
     }
   })
   
-  return techs.slice(0, 4) // Max 4 teknoloji göster
+  sortedTechs.push(...cleanedTechs)
+  return sortedTechs.slice(0, 6)
 }
 
 function projectCard(repo: GitHubRepo) {
@@ -334,52 +426,74 @@ function projectCard(repo: GitHubRepo) {
   const isWeb = projectType === 'web'
   
   return `
-    <div class="project-card p-6 flex flex-col">
+    <div class="project-card p-6 flex flex-col group">
+      <!-- Project Header with Type Indicator -->
       <div class="flex items-start justify-between gap-4 mb-4">
         <div class="flex-1">
-          <h3 class="text-base font-semibold text-slate-100 mb-2">${repo.name}</h3>
-          <p class="text-sm text-slate-300 line-clamp-2">${repo.description || 'No description available'}</p>
-        </div>
-        <div class="flex items-center gap-2 flex-shrink-0">
-          ${projectType === 'web' 
-            ? '<svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>'
-            : projectType === 'mobile'
-            ? '<svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>'
-            : ''
-          }
+          <div class="flex items-center gap-3 mb-3">
+            <h3 class="text-lg font-semibold text-slate-100 group-hover:text-fuchsia-300 transition">${repo.name}</h3>
+            <div class="flex items-center gap-2">
+              ${projectType === 'web' 
+                ? `<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-500/10 border border-blue-500/20">
+                    <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
+                    </svg>
+                    <span class="text-xs font-medium text-blue-300">Web</span>
+                  </div>`
+                : projectType === 'mobile'
+                ? `<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-500/10 border border-green-500/20">
+                    <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                    </svg>
+                    <span class="text-xs font-medium text-green-300">Mobil</span>
+                  </div>`
+                : ''
+              }
+            </div>
+          </div>
+          <p class="text-sm text-slate-300 line-clamp-3 leading-relaxed">${repo.description || 'Bu proje hakkında detaylı bilgi bulunmamaktadır.'}</p>
         </div>
       </div>
       
+      <!-- Technologies Section -->
       ${technologies.length > 0 ? `
-        <div class="flex flex-wrap gap-2 mb-4">
-          ${technologies.map(tech => `
-            <span class="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-xs font-medium text-slate-300">
-              ${tech}
-            </span>
-          `).join('')}
+        <div class="mb-5">
+          <div class="flex flex-wrap gap-2">
+            ${technologies.map(tech => `
+              <span class="inline-flex items-center rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-slate-300 hover:bg-white/10 transition">
+                ${tech}
+              </span>
+            `).join('')}
+          </div>
         </div>
       ` : ''}
       
-      <div class="flex items-center gap-3 mt-auto">
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-3 mt-auto pt-4 border-t border-white/5">
         <a
           href="${repo.html_url}"
           target="_blank"
           rel="noreferrer"
-          class="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs font-medium text-slate-300 transition hover:border-white/20 hover:bg-white/10 hover:text-slate-100"
+          class="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium text-slate-300 transition hover:border-white/20 hover:bg-white/10 hover:text-slate-100"
           onclick="event.stopPropagation()"
         >
-          <span>🔗</span>
-          <span>GitHub</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+          </svg>
+          <span>Kodu Gör</span>
         </a>
         ${isWeb && liveUrl ? `
           <a
             href="${liveUrl}"
             target="_blank"
             rel="noreferrer"
-            class="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs font-medium text-slate-300 transition hover:border-white/20 hover:bg-white/10 hover:text-slate-100"
+            class="inline-flex items-center gap-2 rounded-lg border border-fuchsia-500/20 bg-fuchsia-500/10 px-4 py-2.5 text-sm font-medium text-fuchsia-300 transition hover:border-fuchsia-500/30 hover:bg-fuchsia-500/20"
             onclick="event.stopPropagation()"
           >
-            <span>👁️</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+            </svg>
             <span>Canlı Gör</span>
           </a>
         ` : ''}
@@ -650,31 +764,69 @@ async function fetchGitHubRepos(): Promise<GitHubRepo[]> {
     const repos = await response.json()
     
     if (Array.isArray(repos)) {
-      // Evim projesini özel olarak ekle (gizli repo)
+      // Özel proje bilgileri
+      const projectInfo: Record<string, { description: string; type?: 'web' | 'mobile' }> = {
+        'evim': {
+          description: 'Ev yönetim uygulaması - Kullanıcıların evlerini yönetmelerine yardımcı olan mobil uygulama',
+          type: 'mobile'
+        },
+        'movie-app': {
+          description: 'Film keşif uygulaması - Popüler filmleri keşfedebileceğiniz React Native mobil uygulama',
+          type: 'mobile'
+        },
+        'my-expo-app': {
+          description: 'Expo tabanlı mobil uygulama örneği',
+          type: 'mobile'
+        },
+        'my-chatt': {
+          description: 'Chat uygulaması - Firebase entegrasyonlu mesajlaşma uygulaması',
+          type: 'mobile'
+        },
+        'donna-bianca': {
+          description: 'Donna Bianca Showrooms - Lüks showroom yönetim web uygulaması',
+          type: 'web'
+        },
+        'SerenitaKisiselGelisim': {
+          description: 'Serenita Kişisel Gelişim - Kişisel gelişim platformu web uygulaması',
+          type: 'web'
+        },
+        'Sahiplen': {
+          description: 'Sahiplen - Hayvan sahiplenme platformu web uygulaması',
+          type: 'web'
+        },
+        'ojsNutrition': {
+          description: 'OJS Nutrition - Beslenme takip ve danışmanlık mobil uygulaması',
+          type: 'mobile'
+        }
+      }
+      
+      const filteredRepos = repos
+        .filter((repo: any) => !repo.fork && repo.name !== 'nurcandogan' && repo.name !== 'portfolyo')
+        .slice(0, 9)
+        .map((repo: any) => {
+          const info = projectInfo[repo.name]
+          return {
+            name: repo.name || '',
+            description: info?.description || repo.description || `${repo.name} projesi`,
+            html_url: repo.html_url || LINKS.github,
+            updated_at: repo.updated_at || '',
+            language: repo.language || null,
+            homepage: repo.homepage || null,
+            topics: repo.topics || [],
+          }
+        })
+      
+      // Evim projesini başa ekle
       const evimProject: GitHubRepo = {
         name: 'evim',
-        description: 'Ev yönetim uygulaması',
+        description: projectInfo['evim'].description,
         html_url: 'https://github.com/nurcandogan/evim',
         updated_at: new Date().toISOString(),
         language: 'TypeScript',
         homepage: null,
-        topics: ['react-native', 'mobile', 'typescript'],
+        topics: ['react-native', 'mobile', 'typescript', 'expo'],
       }
       
-      const filteredRepos = repos
-        .filter((repo: any) => !repo.fork && repo.name !== 'nurcandogan' && repo.name !== 'portfolyo') // Fork'ları, profil ve portfolyo'yu filtrele
-        .slice(0, 6) // 6 repo al, evim'i ekleyince 7 olacak
-        .map((repo: any) => ({
-          name: repo.name || '',
-          description: repo.description || null,
-          html_url: repo.html_url || LINKS.github,
-          updated_at: repo.updated_at || '',
-          language: repo.language || null,
-          homepage: repo.homepage || null,
-          topics: repo.topics || [],
-        }))
-      
-      // Evim projesini başa ekle
       return [evimProject, ...filteredRepos]
     }
     return []
