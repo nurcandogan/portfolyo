@@ -314,26 +314,25 @@ ul {
     0 0 24px rgba(234, 76, 137, 0.7);
 }
 
-/* From Uiverse.io by cssbuttons-io */
+/* From Uiverse.io by cssbuttons-io (tweaked) */
 .email-button {
   --glow-color: rgb(217, 176, 255);
-  --glow-spread-color: rgba(191, 123, 255, 0.781);
-  --enhanced-glow-color: rgb(231, 206, 255);
+  --glow-spread-color: rgba(191, 123, 255, 0.6);
   --btn-color: rgb(100, 61, 136);
-  border: .25em solid var(--glow-color);
-  padding: 1em 3em;
-  color: var(--glow-color);
+  border: .2em solid rgba(217,176,255,0.95);
+  padding: 0.95em 2.6em;
+  color: #fff;
   font-size: 15px;
-  font-weight: bold;
+  font-weight: 700;
   background-color: var(--btn-color);
   border-radius: 1em;
   outline: none;
-  box-shadow: 0 0 1em .25em var(--glow-color),
-          0 0 4em 1em var(--glow-spread-color),
-          inset 0 0 .75em .25em var(--glow-color);
-  text-shadow: 0 0 .5em var(--glow-color);
+  box-shadow: 0 10px 26px rgba(0,0,0,0.42),
+              0 0 1.1em .22em var(--glow-spread-color),
+              inset 0 0 .55em .14em rgba(217,176,255,0.16);
+  text-shadow: none;
   position: relative;
-  transition: all 0.3s;
+  transition: all 0.22s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -350,23 +349,24 @@ ul {
   height: 100%;
   width: 100%;
   background-color: var(--glow-spread-color);
-  filter: blur(2em);
-  opacity: .7;
+  filter: blur(1.6em);
+  opacity: .6;
   transform: perspective(1.5em) rotateX(35deg) scale(1, .6);
 }
 
 .email-button:hover {
-  color: var(--btn-color);
+  color: #fff;
   background-color: var(--glow-color);
-  box-shadow: 0 0 1em .25em var(--glow-color),
-          0 0 4em 2em var(--glow-spread-color),
-          inset 0 0 .75em .25em var(--glow-color);
+  box-shadow: 0 14px 34px rgba(0,0,0,0.48),
+              0 0 1.9em .4em var(--glow-spread-color),
+              inset 0 0 .7em .2em rgba(217,176,255,0.26);
 }
 
 .email-button:active {
-  box-shadow: 0 0 0.6em .25em var(--glow-color),
-          0 0 2.5em 2em var(--glow-spread-color),
-          inset 0 0 .5em .25em var(--glow-color);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.4),
+              0 0 .9em .24em var(--glow-spread-color),
+              inset 0 0 .44em .12em rgba(217,176,255,0.15);
+  transform: translateY(1px);
 }
 
 /* From Uiverse.io by SteveBloX */

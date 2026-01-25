@@ -161,6 +161,12 @@ app.innerHTML = `
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
             </svg>
           </button>
+          <!-- Mobile menu toggle -->
+          <button id="mobile-toggle" class="md:hidden inline-flex items-center justify-center rounded-xl p-2.5 text-slate-200 transition hover:bg-white/5" aria-label="Open menu">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
           <div class="flex items-center gap-1 rounded-xl border border-white/10 bg-white/5 p-1">
             <button
               id="lang-tr"
@@ -560,6 +566,17 @@ function initThemeToggle() {
       sunIcon.classList.remove('hidden')
       moonIcon.classList.add('hidden')
     }
+  })
+}
+
+// Mobile nav toggle for small screens
+function initMobileToggle() {
+  const mobileToggle = document.getElementById('mobile-toggle')
+  const nav = document.querySelector('header nav')
+  if (!mobileToggle || !nav) return
+
+  mobileToggle.addEventListener('click', () => {
+    nav.classList.toggle('hidden')
   })
 }
 
@@ -1131,6 +1148,11 @@ function initRouter() {
       const route = (e.target as HTMLElement).getAttribute('data-route')
       if (route) {
         navigateTo(route)
+        // If on small screen, hide the nav after navigation
+        if (window.innerWidth < 768) {
+          const nav = document.querySelector('header nav')
+          if (nav) nav.classList.add('hidden')
+        }
       }
     })
   })
@@ -1153,4 +1175,5 @@ setTimeout(() => {
   initThemeToggle()
   initLanguageToggle()
   initRouter()
+  initMobileToggle()
 }, 0)
