@@ -149,18 +149,6 @@ app.innerHTML = `
         </nav>
 
         <div class="flex items-center gap-3">
-          <button
-            id="theme-toggle"
-            class="inline-flex items-center justify-center rounded-xl border border-white/10 bg-white/5 p-2.5 text-slate-200 transition hover:border-white/20 hover:bg-white/10"
-            aria-label="Toggle theme"
-          >
-            <svg id="sun-icon" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
-            </svg>
-            <svg id="moon-icon" class="h-5 w-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-            </svg>
-          </button>
           <!-- Mobile menu toggle -->
           <button id="mobile-toggle" class="md:hidden inline-flex items-center justify-center rounded-xl p-2.5 text-slate-200 transition hover:bg-white/5" aria-label="Open menu">
             <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -533,40 +521,6 @@ function articleCard(title: string, desc: string, year: string, href: string) {
       </div>
     </a>
   `
-}
-
-// Theme toggle functionality
-function initThemeToggle() {
-  const themeToggle = document.getElementById('theme-toggle')
-  const sunIcon = document.getElementById('sun-icon')
-  const moonIcon = document.getElementById('moon-icon')
-  
-  if (!themeToggle || !sunIcon || !moonIcon) return
-  
-  // Check for saved theme preference or default to dark
-  const currentTheme = localStorage.getItem('theme') || 'dark'
-  document.documentElement.classList.toggle('light', currentTheme === 'light')
-  
-  if (currentTheme === 'light') {
-    sunIcon.classList.add('hidden')
-    moonIcon.classList.remove('hidden')
-  } else {
-    sunIcon.classList.remove('hidden')
-    moonIcon.classList.add('hidden')
-  }
-  
-  themeToggle.addEventListener('click', () => {
-    const isLight = document.documentElement.classList.toggle('light')
-    localStorage.setItem('theme', isLight ? 'light' : 'dark')
-    
-    if (isLight) {
-      sunIcon.classList.add('hidden')
-      moonIcon.classList.remove('hidden')
-    } else {
-      sunIcon.classList.remove('hidden')
-      moonIcon.classList.add('hidden')
-    }
-  })
 }
 
 // Mobile nav toggle for small screens
@@ -1172,7 +1126,6 @@ function initRouter() {
 
 // Initialize theme and language toggles
 setTimeout(() => {
-  initThemeToggle()
   initLanguageToggle()
   initRouter()
   initMobileToggle()
