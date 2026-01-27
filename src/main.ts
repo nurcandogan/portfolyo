@@ -123,6 +123,9 @@ const translations = {
   },
 }
 
+
+
+// Render the main app structure
 const app = document.querySelector<HTMLDivElement>('#app')
 if (!app) throw new Error('Missing #app element')
 
