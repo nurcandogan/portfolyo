@@ -3,7 +3,7 @@ import './style.css'
 const LINKS = {
   linkedin: 'https://www.linkedin.com/in/nurcan-do%C4%9Fan/',
   github: 'https://github.com/nurcandogan',
-  githubApi: 'https://api.github.com/users/nurcandogan/repos?sort=updated&per_page=20',
+  githubApi: 'https://api.github.com/users/nurcandogan/repos?sort=updated&per_page=100',
   medium: 'https://medium.com/@nurcan.d00',
   mediumRss: 'https://medium.com/feed/@nurcan.d00',
   email: 'mailto:nurcan.d00@gmail.com',
@@ -294,7 +294,7 @@ function getProjectType(repo: GitHubRepo): 'web' | 'mobile' | 'other' {
   
   // Özel proje tipleri
   const mobileProjects = ['evim', 'movie-app', 'my-expo-app', 'my-chatt', 'ojsNutrition']
-  const webProjects = ['donna-bianca', 'SerenitaKisiselGelisim', 'Sahiplen']
+  const webProjects = ['donna-bianca', 'SerenitaKisiselGelisim', 'Sahiplen', 'CineMatch--boilerplate', 'CineMatch', 'EduCRM']
   
   if (mobileProjects.includes(repo.name) || topics.includes('react-native') || topics.includes('mobile') || name.includes('mobile') || name.includes('app') || topics.includes('android') || topics.includes('ios')) {
     return 'mobile'
@@ -327,7 +327,10 @@ function getTechnologies(repo: GitHubRepo): string[] {
     'ojsNutrition': ['React Native', 'TypeScript', 'Expo', 'Tailwind CSS', 'Async Storage', 'Zustand', 'Formik', 'React Navigation'],
     'StarWars-Proje': ['React', 'TypeScript', 'Vite'],
     'Focus-Mood': ['React Native', 'TypeScript', 'Expo'],
-    'portfolyo': ['TypeScript', 'Vite', 'Tailwind CSS']
+    'portfolyo': ['TypeScript', 'Vite', 'Tailwind CSS'],
+    'CineMatch--boilerplate': ['React', 'TypeScript', 'Vite', 'Tailwind CSS'],
+    'CineMatch': ['React', 'TypeScript', 'Vite', 'Tailwind CSS'],
+    'EduCRM': ['React', 'TypeScript', 'Vite', 'Tailwind CSS']
   }
   
   // Eğer proje için özel teknoloji bilgisi varsa kullan
@@ -748,6 +751,8 @@ async function fetchGitHubRepos(): Promise<GitHubRepo[]> {
     if (Array.isArray(repos)) {
       // Gösterilecek sabit proje listesi (sıralama önemli)
       const allowedProjects = [
+        'CineMatch--boilerplate',
+        'EduCRM',
         'evim',
         'movie-app',
         'my-expo-app',
@@ -761,8 +766,19 @@ async function fetchGitHubRepos(): Promise<GitHubRepo[]> {
         'portfolyo'
       ]
       
-      // Özel proje bilgileri
-      const projectInfo: Record<string, { description: string; type?: 'web' | 'mobile' }> = {
+      // Özel proje bilgileri (displayName: kartta görünen isim)
+      const projectInfo: Record<string, { description: string; type?: 'web' | 'mobile'; displayName?: string; homepage?: string; html_url?: string }> = {
+        'CineMatch--boilerplate': {
+          description: 'CineMatch - Film zevkine göre öneriler sunan film eşleştirme web uygulaması',
+          type: 'web',
+          displayName: 'CineMatch',
+          homepage: 'https://cinematch-boilerplate-five.vercel.app',
+        },
+        'EduCRM': {
+          description: 'EduCRM - Eğitim kurumları için öğrenci ve süreç yönetimi CRM web uygulaması',
+          type: 'web',
+          html_url: 'https://github.com/nurcandogan',
+        },
         'evim': {
           description: 'Ev yönetim uygulaması - Kullanıcıların evlerini yönetmelerine yardımcı olan mobil uygulama',
           type: 'mobile'
@@ -818,20 +834,21 @@ async function fetchGitHubRepos(): Promise<GitHubRepo[]> {
       })
       
       // Sadece izin verilen projeleri, belirlenen sırayla al
+      // GitHub'da yoksa (private / henüz repo yok) projectInfo ile yine göster
       const filteredRepos = allowedProjects
         .map((projectName) => {
           const repo = reposMap.get(projectName)
-          if (!repo) return null
-          
           const info = projectInfo[projectName]
+          if (!repo && !info) return null
+          
           return {
-            name: repo.name || projectName,
-            description: info?.description || repo.description || `${projectName} projesi`,
-            html_url: repo.html_url || `https://github.com/nurcandogan/${projectName}`,
-            updated_at: repo.updated_at || '',
-            language: repo.language || null,
-            homepage: repo.homepage || null,
-            topics: repo.topics || [],
+            name: info?.displayName || repo?.name || projectName,
+            description: info?.description || repo?.description || `${projectName} projesi`,
+            html_url: info?.html_url || repo?.html_url || `https://github.com/nurcandogan/${projectName}`,
+            updated_at: repo?.updated_at || '',
+            language: repo?.language || null,
+            homepage: info?.homepage || repo?.homepage || null,
+            topics: repo?.topics || [],
           }
         })
         .filter((repo): repo is GitHubRepo => repo !== null)
