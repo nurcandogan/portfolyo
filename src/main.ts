@@ -847,7 +847,7 @@ async function fetchGitHubRepos(): Promise<GitHubRepo[]> {
             html_url: info?.html_url || repo?.html_url || `https://github.com/nurcandogan/${projectName}`,
             updated_at: repo?.updated_at || '',
             language: repo?.language || null,
-            homepage: info?.homepage || repo?.homepage || null,
+            homepage: info && 'homepage' in info ? info.homepage ?? null : (repo?.homepage || null),
             topics: repo?.topics || [],
           }
         })
